@@ -2,21 +2,21 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useAuth } from "@/providers/AuthProvider";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { data: session } = useSession();
   const router = useRouter();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
     toast.success("Logged out successfully!");
     router.push("/");
   };
@@ -49,7 +49,7 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            {user ? (
+            {session ? (
               <button
                 onClick={handleLogout}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium transition-colors duration-200"
@@ -118,7 +118,7 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
-              {user ? (
+              {session ? (
                 <button
                   onClick={() => {
                     handleLogout();

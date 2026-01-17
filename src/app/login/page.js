@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { useAuth } from "@/providers/AuthProvider";
+import { useSession, signIn } from "next-auth/react";
 
 const LoginPage = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { data: session, status } = useSession();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,10 +16,10 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      router.push("/");
+    if (status === "authenticated") {
+      router.push("/items");
     }
-  }, [user, router]);
+  }, [status, router]);
 
   const handleChange = (e) => {
     setFormData({
@@ -33,24 +33,19 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(formData),
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (result.ok) {
         toast.success("Login successful!");
         setTimeout(() => {
-          window.location.href = "/";
+          router.push("/items");
         }, 1000);
       } else {
-        toast.error(data.message || "Login failed");
+        toast.error("Invalid email or password");
       }
     } catch (error) {
       toast.error("Unable to connect to server");
@@ -58,6 +53,22 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signIn("google", { callbackUrl: "/items" });
+    } catch (error) {
+      toast.error("Google login failed");
+    }
+  };
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center px-4 py-12">
@@ -146,7 +157,7 @@ const LoginPage = () => {
 
           <button
             type="button"
-            onClick={() => console.log("Google login clicked")}
+            onClick={handleGoogleLogin}
             className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
