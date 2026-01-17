@@ -2,18 +2,28 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useAuth } from "@/providers/AuthProvider";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const router = useRouter();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleLogout = () => {
+    logout();
+    toast.success("Logged out successfully!");
+    router.push("/");
+  };
+
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Items", path: "/items" },
-    { name: "Login", path: "/login" },
   ];
 
   return (
@@ -39,6 +49,21 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium transition-colors duration-200"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -93,6 +118,25 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
+              {user ? (
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 font-medium transition-colors duration-200 text-left"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-gray-700 hover:text-blue-600 hover:bg-gray-50 font-medium px-3 py-2 rounded-md transition-colors duration-200"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         )}

@@ -1,17 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useAuth } from "@/providers/AuthProvider";
 
 const LoginPage = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   const handleChange = (e) => {
     setFormData({
@@ -30,16 +38,16 @@ const LoginPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        document.cookie = `userEmail=${data.user.email}; path=/; max-age=86400`;
         toast.success("Login successful!");
         setTimeout(() => {
-          router.push("/");
+          window.location.href = "/";
         }, 1000);
       } else {
         toast.error(data.message || "Login failed");
