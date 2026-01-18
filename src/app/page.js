@@ -10,7 +10,9 @@ export default function Home() {
   useEffect(() => {
     const fetchFeaturedItems = async () => {
       try {
-        const response = await fetch("http://localhost:5000/items");
+        const response = await fetch(
+          "https://campus-mart-server.vercel.app/items",
+        );
         const data = await response.json();
         setFeaturedItems(data.slice(0, 4));
       } catch (error) {
