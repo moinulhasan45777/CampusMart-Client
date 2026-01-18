@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CampusMart - Campus Marketplace
 
-## Getting Started
+## Project Description
 
-First, run the development server:
+A simple marketplace web application where students can browse items and post new items for sale. Built with Next.js, Express.js, and MongoDB.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Setup & Installation Instructions
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend Setup
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+1. Navigate to backend directory:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   cd CampusMart-Server
+   ```
 
-## Learn More
+2. Install dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Create `.env.local` file:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```
+   MONGODB_URI=your_mongodb_connection_string
+   PORT=5000
+   ```
 
-## Deploy on Vercel
+4. Start server:
+   ```bash
+   node index.js
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Frontend Setup
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Navigate to frontend directory:
+
+   ```bash
+   cd CampusMart-Client
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Create `.env.local` file:
+
+   ```
+   NEXTAUTH_URL=http://localhost:3000
+   NEXTAUTH_SECRET=your_secret_key
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   ```
+
+4. Start development server:
+   ```bash
+   npm run dev
+   ```
+
+## Route Summary
+
+### Public Routes
+
+- `/` - Landing page
+- `/login` - Login page
+- `/items` - Browse all items
+- `/items/[id]` - Item details page
+
+### Protected Routes
+
+- `/items/add-item` - Add new item (requires authentication)
+
+## List of Implemented Features
+
+1. Authentication (Google OAuth and Credential Login)
+2. Landing Page with Navbar and Footer
+3. Items List Page
+4. Item Details Page
+5. Add Item Page (Protected)
+
+## Brief Explanation of Features
+
+**Authentication**: Users can log in using Google OAuth or email/password credentials. NextAuth.js manages sessions and proxy.js protects authenticated routes.
+
+**Landing Page**: Home page with navigation to Items and Login pages. Includes responsive Navbar and Footer components.
+
+**Items List Page**: Displays all items in a responsive grid. Each item card shows name, description, price (in Taka), and image. Users can click "View Details" to see more information.
+
+**Item Details Page**: Shows complete item information including image, name, price, category, condition, description, seller, and listed date. Includes back navigation to items list.
+
+**Add Item Page**: Protected page where authenticated users can add new items. Form includes fields for name, description, price, image URL, category, and condition. Automatically captures seller email from session.

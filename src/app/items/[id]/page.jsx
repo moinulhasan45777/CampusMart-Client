@@ -13,26 +13,30 @@ const ItemDetailsPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchItem();
-  }, [params.id]);
-
-  const fetchItem = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/items/${params.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setItem(data);
-      } else {
-        toast.error("Item not found");
+    const fetchItem = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/items/${params.id}`,
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setItem(data);
+        } else {
+          toast.error("Item not found");
+          router.push("/items");
+        }
+      } catch (error) {
+        toast.error("Failed to fetch item details");
         router.push("/items");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      toast.error("Failed to fetch item details");
-      router.push("/items");
-    } finally {
-      setLoading(false);
+    };
+
+    if (params.id) {
+      fetchItem();
     }
-  };
+  }, [params.id, router]);
 
   if (loading) {
     return (
@@ -71,7 +75,6 @@ const ItemDetailsPage = () => {
 
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Image Section */}
             <div className="relative h-96 lg:h-full bg-gray-200">
               <Image
                 src={
@@ -85,7 +88,6 @@ const ItemDetailsPage = () => {
               />
             </div>
 
-            {/* Details Section */}
             <div className="p-8">
               <div className="mb-6">
                 <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -158,7 +160,7 @@ const ItemDetailsPage = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg font-semibold text-lg">
+                <button className="flex-1 bg-linear-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg font-semibold text-lg">
                   Contact Seller
                 </button>
                 <button className="flex-1 bg-gray-200 text-gray-800 px-8 py-4 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-semibold text-lg">
