@@ -92,11 +92,14 @@ const ItemsPage = () => {
                   </p>
                   <div className="flex justify-between items-center">
                     <span className="text-2xl font-bold text-blue-600">
-                      ${item.price}
+                      ৳{item.price}
                     </span>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
+                    <Link
+                      href={`/items/${item._id}`}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
+                    >
                       View Details
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
