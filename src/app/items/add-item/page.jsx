@@ -30,17 +30,20 @@ const AddItemPage = () => {
     setSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5000/items", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "https://campus-mart-server.vercel.app/items",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            price: parseFloat(formData.price),
+            seller: session?.user?.email || "Anonymous",
+          }),
         },
-        body: JSON.stringify({
-          ...formData,
-          price: parseFloat(formData.price),
-          seller: session?.user?.email || "Anonymous",
-        }),
-      });
+      );
 
       if (response.ok) {
         toast.success("Item added successfully!");

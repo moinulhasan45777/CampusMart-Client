@@ -17,7 +17,9 @@ const ItemsPage = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("http://localhost:5000/items");
+      const response = await fetch(
+        "https://campus-mart-server.vercel.app/items",
+      );
       const data = await response.json();
       setItems(data);
     } catch (error) {

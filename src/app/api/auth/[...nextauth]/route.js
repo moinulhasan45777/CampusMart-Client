@@ -16,16 +16,19 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         try {
-          const response = await fetch("http://localhost:5000/login", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const response = await fetch(
+            "https://campus-mart-server.vercel.app/login",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: credentials.email,
+                password: credentials.password,
+              }),
             },
-            body: JSON.stringify({
-              email: credentials.email,
-              password: credentials.password,
-            }),
-          });
+          );
 
           const data = await response.json();
 
